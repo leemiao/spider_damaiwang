@@ -1,4 +1,5 @@
 import requests
+import json
 
 
 class Spider(object):
@@ -26,13 +27,16 @@ class Spider(object):
     def get(self):
         response = requests.post(url=self.url, headers=self.headers, data=self.data)
         # 测试
-        print(response.text)
+        # print(response.text)
+        return response
 
-    # # 解析数据
-    # def parse(self):
-    #     # 构造字典
-    #     data_dict = {}
-    #     pass
+    # 解析数据
+    def parse(self):
+
+        dict_data = json.loads(self.get().text)
+        # 测试字典数据是否能解析出来
+        print(dict_data["pageData"]["resultData"])
+
     #
     # # 保存数据
     # def save(self):
@@ -49,5 +53,5 @@ class Spider(object):
 
 if __name__ == '__main__':
     spider = Spider()
-    spider.get()
+    spider.parse()
 
