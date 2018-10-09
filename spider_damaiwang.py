@@ -1,5 +1,6 @@
 import requests
 import json
+import csv
 
 
 class Spider(object):
@@ -17,6 +18,7 @@ class Spider(object):
             "tsg": "0",
             "order": "1"
         }
+        self.data_key = None
         # 构造IP代理(按需求开启)
         # proxies = {
         #     "http": "http://47.93.56.0:3128",
@@ -32,26 +34,41 @@ class Spider(object):
 
     # 解析数据
     def parse(self):
-
+        # 将字符串数据转换成字典数据
         dict_data = json.loads(self.get().text)
-        # 测试字典数据是否能解析出来
-        print(dict_data["pageData"]["resultData"])
 
-    #
-    # # 保存数据
-    # def save(self):
-    #     pass
-    #
-    # def run(self):
-    #     # 1.请求url获取响应
-    #     self.get()
-    #     # 2.解析数据
-    #     self.parse()
-    #     # 3.保存数据
-    #     self.save()
+        # 测试字典数据是否能解析出来
+        # print(dict_data["pageData"]["resultData"])
+
+        # 将需要的爬取的字典数据存储在变量中
+        need_spider_data = dict_data["pageData"]["resultData"]
+
+        # 构造存储头列表,第一种方法
+        data_key = []
+        for item in need_spider_data[0]:
+            data_key.append(item)
+
+        # 打印测试
+        # print(data_key)
+        self.data_key = data_key
+
+        # # 第二种方法
+        # data_keys = need_spider_data[0].keys()
+        #
+        # # 打印测试
+        # print(data_keys)
+        return need_spider_data
+
+
+    # 保存为字典数据
+    def save_dict(self):
+        with open("damaiwang", 'w', encoding='utf8') as f:
+            f.write(str(self.parse()))
+
 
 
 if __name__ == '__main__':
     spider = Spider()
     spider.parse()
+    spider.save_dict()
 
