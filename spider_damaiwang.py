@@ -42,7 +42,7 @@ class Spider(object):
 
         # 将需要的爬取的字典数据存储在变量中
         need_spider_data = dict_data["pageData"]["resultData"]
-
+        # print(need_spider_data)
         # 构造存储头列表,第一种方法
         data_key = []
         for item in need_spider_data[0]:
@@ -59,16 +59,41 @@ class Spider(object):
         # print(data_keys)
         return need_spider_data
 
+    # 保存为CSV数据
+    def save(self):
+        # 构建属性列表
+        # list = ['actors', 'categoryname', 'cityname', 'description', 'price', 'pricehigh', 'showstatus', 'showtime', 'subcategoryname', 'venue', 'venuecity', 'verticalPic']
+        list = self.data_key
 
-    # 保存为字典数据
-    def save_dict(self):
-        with open("damaiwang", 'w', encoding='utf8') as f:
-            f.write(str(self.parse()))
+        # 此处出现保存，报错为缺少字段，因此追加一个字段
+        list.append('favourable')
+        # 测试list
+        print(list)
+
+        # 数据
+        my_data = self.parse()
+        # 测试
+        print(my_data)
+
+        with open("damaiwang" + ".csv", "w", newline="", encoding='utf8') as f:
+            # 传入头数据，即第一行数据
+            writer = csv.DictWriter(f, list)
+            writer.writeheader()
+            for row in my_data:
+                writer.writerow(row)
+
+
+    # # 保存为字典数据
+    # def save_dict(self):
+    #     with open("damaiwang", 'w', encoding='utf8') as f:
+    #         f.write(str(self.parse()))
+
 
 
 
 if __name__ == '__main__':
     spider = Spider()
+    # spider.run()
     spider.parse()
-    spider.save_dict()
+    spider.save()
 
